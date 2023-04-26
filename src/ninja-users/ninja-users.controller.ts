@@ -1,20 +1,38 @@
-import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { CreateNinjaUsersDto } from './dto/create-ninja-users.dto';
+import { type } from 'os';
+import { NinjaUsersService } from './ninja-users.service';
 
 @Controller('ninja-users')
 export class NinjaUsersController {
+  constructor(private readonly ninjaService: NinjaUsersService) {}
+
   // GET /ninja --> []
 
   @Get()
-  getNinja() {
-    return [];
+  getNinja(@Query('hero') hero: 'saber' | 'hayabusa') {
+    return this.ninjaService.getNinjas(hero);
   }
 
   // GET /ninja/:id
 
   @Get(':id')
-  getOneNinja() {
-    return {};
+  getOneNinja(@Param('id') id: number) {
+    try {
+      return this.ninjaService.getNinja(+id);
+    } catch (err) {
+      throw new NotFoundException();
+    }
   }
 
   // POST
@@ -27,8 +45,10 @@ export class NinjaUsersController {
 
   // PUT //ninja/:id
   @Put(':id')
-  updateNinja() {
-    return {};
+  updateNinja(@Param('id') id: string) {
+    return {
+      id,
+    };
   }
 
   // DELETE /ninja/:id
