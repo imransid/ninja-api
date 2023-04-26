@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  ValidationPipe,
 } from '@nestjs/common';
 import { CreateNinjaUsersDto } from './dto/create-ninja-users.dto';
 import { type } from 'os';
@@ -37,7 +38,7 @@ export class NinjaUsersController {
 
   // POST
   @Post()
-  createNinja(@Body() createNinjaDto: CreateNinjaUsersDto) {
+  createNinja(@Body(new ValidationPipe()) createNinjaDto: CreateNinjaUsersDto) {
     return {
       name: createNinjaDto.name,
     };
